@@ -8,7 +8,7 @@ Untuk saat ini ekstensi belum tersedia di Chrome Web Store, namun anda dapat men
 
 ## Panduan Instalasi
 
-- Download file ```.crx``` [disini]()
+- Download file ```.crx``` [disini](crx/rekap-kinerja-chrome-extension.crx)
 - Install ekstensi dengan membuka file yang telah diunduh
 - Setelah ekstensi terinstall, buka halaman ```eKinerja```, pastikan saat ini membuka tab ```Mingguan``` seperti tangkapan layar berikut
 ![App Screenshot](screenshot/page.png?raw=true)
