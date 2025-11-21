@@ -3,6 +3,8 @@
 
 <head>
   <title>Capture HTML Table</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
       width: 300px;
@@ -28,19 +30,34 @@
 </head>
 
 <body>
-  <h3>Rekap Kinerja</h3>
-  <p>Ini merupakan ekstensi untuk merekap kinerja anda.</p>
+  <!-- logo on the right side -->
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+    <div style="flex: 1;">
+      <h3>Rekap Kinerja</h3>
+    </div>
+    <div style="flex: 0;">
+      <img src="icon-48.png" alt="Rekap Kinerja Logo" width="48" height="48">
+    </div>
+
+  </div>
+  <p>Ini merupakan ekstensi untuk merekap kinerja anda. <a
+      href="https://github.com/ibnunaufal/rekap-kinerja-chrome-extension" target="_blank">Lihat cara penggunaan</a>
+  </p>
 
   <button id="capture-docx">Export as DOCX</button>
 
   <p>Data hanya diproses dan disimpan secara lokal di browser Anda. Kami tidak menyimpan data Anda sama sekali.</p>
+  <!-- copyright, made with ❤️ by Ibnu Naufal -->
+  <p>© 2024 Rekap Kinerja Extension.
+    <br> Made with ❤️ by <a href="https://naufall.com" target="_blank">Naufal</a>
+  </p>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
   <script src="libs/docx.js"></script>
   <script src="libs/FileSaver.js"></script>
   <script src="popup.js"></script>
- 
+
 </body>
 
 </html>
