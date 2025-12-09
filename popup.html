@@ -2,17 +2,26 @@
 <html>
 
 <head>
-  <title>Capture HTML Table</title>
+  <title>Rekap E-Kinerja</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap"
+    rel="stylesheet">
   <style>
     body {
-      width: 300px;
+      width: 500px;
       padding: 10px;
-      font-family: Arial, sans-serif;
+      font-family: 'Plus Jakarta Sans', Arial, sans-serif;
     }
 
-    button {
+    p {
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    /* button {
       width: 100%;
       padding: 8px;
       margin: 5px 0;
@@ -25,6 +34,144 @@
 
     button:hover {
       background-color: #45a049;
+    } */
+
+    button-yellow {
+      background: #fbca1f;
+    }
+
+    button-blue {
+      background: #3E4095;
+      color: white;
+    }
+
+    button {
+      width: 100%;
+      margin: 5px 0;
+      font-family: inherit;
+      padding: 0.6em 1.3em;
+      font-weight: 900;
+      border: 3px solid black;
+      border-radius: 0.4em;
+      box-shadow: 0.1em 0.1em;
+      cursor: pointer;
+    }
+
+    button:hover {
+      transform: translate(-0.05em, -0.05em);
+      box-shadow: 0.30em 0.30em;
+    }
+
+    button:active {
+      transform: translate(0.05em, 0.05em);
+      box-shadow: 0.05em 0.05em;
+    }
+
+    ol {
+      padding-left: 20px;
+      font-size: 14px;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+    }
+
+    table,
+    th,
+    td {
+      border: 1px solid black;
+      padding: 4px;
+    }
+
+    th {
+      background-color: #dadada;
+    }
+
+    #instruction {
+      height: 0px;
+      opacity: 0;
+      max-height: 0;
+      /* Or a fixed height if content size is known */
+      overflow: hidden;
+      transition: opacity 0.5s ease-in-out, max-height 0.5s ease-in-out;
+      margin: 0px;
+    }
+
+    #instruction.visible {
+      height: auto;
+      opacity: 1;
+      max-height: 200px;
+      margin: 10px 0;
+      border: 2px solid black;
+      border-radius: 4px;
+      box-shadow: 0.1em 0.1em;
+      cursor: pointer;
+      padding-top: 5px;
+      padding-left: 20px;
+      padding-right: 5px;
+      padding-bottom: 5px;
+      /* Or a suitable height to reveal content */
+    }
+
+    #identity-inputs input {
+      font-family: inherit;
+      font-size: 14px;
+    }
+
+    #identity-inputs label {
+      font-size: 14px;
+    }
+
+    #identity-inputs {
+      height: 0px;
+      opacity: 0;
+      max-height: 0;
+      /* Or a fixed height if content size is known */
+      overflow: hidden;
+      transition: opacity 0.5s ease-in-out, max-height 0.5s ease-in-out;
+      margin: 0px;
+    }
+
+    #identity-inputs.visible {
+      height: auto;
+      opacity: 1;
+      max-height: 200px;
+      margin: 10px 0;
+      border: 2px solid black;
+      border-radius: 4px;
+      box-shadow: 0.1em 0.1em;
+      cursor: pointer;
+      padding-top: 5px;
+      padding-left: 20px;
+      padding-right: 5px;
+      padding-bottom: 5px;
+    }
+
+    .blinking-text {
+      padding: 5px;
+      animation: blink-animation 1.5s steps(5, start) infinite;
+    }
+
+
+    .blinking-text {
+      font-family: sans-serif;
+      animation: colorChange 1s infinite alternate;
+      /* Apply the animation */
+    }
+
+    @keyframes colorChange {
+      0% {
+        background: white;
+      }
+
+      50% {
+        background: yellow;
+      }
+
+      100% {
+        background: white;
+      }
     }
   </style>
 </head>
@@ -33,26 +180,102 @@
   <!-- logo on the right side -->
   <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
     <div style="flex: 1;">
-      <h3>Rekap Kinerja</h3>
+      <h1>Rekap Kinerja</h1>
     </div>
     <div style="flex: 0;">
       <img src="icon-48.png" alt="Rekap Kinerja Logo" width="48" height="48">
     </div>
 
   </div>
-  <p>Ini merupakan ekstensi untuk merekap kinerja anda. <a
+  <hr>
+
+  <!-- <p>Ini merupakan ekstensi untuk merekap kinerja anda. <a
       href="https://github.com/ibnunaufal/rekap-kinerja-chrome-extension" target="_blank">Lihat cara penggunaan</a>
+  </p> -->
+
+  <!-- make it 2 col -->
+  <!-- <div style="display: flex; gap: 10px;">
+    <button id="capture-docx" style="background: #fbca1f; flex: 1;">Ekspor Pekan Ini </button>
+    <button id="save-current" style="background: #3E4095; color: white; flex: 1;">Simpan Kinerja Pekan Ini</button>
+  </div> -->
+  <h3 style="margin: 0px;">Langkah 1. Simpan</h3>
+  <p style="margin: 2px 0px;">Buka e-Kinerja pada tab Mingguan <a href="assets/page.png" target="_blank">(yg kaya gini)</a>. <br>Lalu klik "Simpan Kinerja Pekan Ini".</p>
+  <button id="save-current" style="background: #fbca1f; flex: 1;">Simpan Kinerja Pekan Ini</button>
+  <!-- button with open new tab icon -->
+  <!-- <button id="open-editor" style="background: white">Buka Editor <img src="assets/ic-open-new-tab.svg" alt="Open New Tab" style="width:24px; height:24px; margin-left: 10px; vertical-align:middle;"></button> -->
+
+  <!-- 
+  show the saved data
+  [ ] Pekan 47  | [ ] Pekan 48  | [ ] Pekan 49
+  ______________________________________________________
+  [ ] 17-10-2025| [ ] 24-10-2025| [ ] 01-12-2025|
+  [ ] 18-10-2025| [ ] 25-10-2025| [ ] 02-12-2025|
+  [ ] 19-10-2025| [ ] 26-10-2025| [ ] 03-12-2025|
+  [ ] 20-10-2025| [ ] 27-10-2025| [ ] 04-12-2025|
+  [ ] 21-10-2025| [ ] 28-10-2025| [ ] 05-12-2025|
+   -->
+  <hr>
+  <h3 style="margin: 0px;">Langkah 2. Pilih & Ekspor</h3>
+  <p style="margin: 2px 0px;">
+    Pilih tanggal kinerja yang sudah disimpan untuk diekspor ke file DOCX.
   </p>
+  <div>
+    <h4 style="margin-bottom: 3px;">Data Tersimpan</h4>
+    <div id="saved-data-container"
+      style="overflow-y: auto; border: 2px solid black; padding: 5px; border-radius: 4px; box-shadow: 0.1em 0.1em;">
+      <!-- saved data will be shown here -->
+    </div>
+  </div>
+  <div style="margin: 10px 0px;">
+    <div style="display: flex; align-items: center; gap: 5px;" style="font-size: 14px;">
+      <input id="toggle-identity" type="checkbox"></input>
+      <label for="toggle-identity" style="font-size: 14px;">Sertakan identitas anda pada dokumen</label>
+    </div>
+    <!-- input nama, nip, jabatan,unit kerja -->
+    <div id="identity-inputs"
+      style="border: 2px solid black; padding: 5px; border-radius: 4px; box-shadow: 0.1em 0.1em;">
+      <div style="display: flex; flex-direction: column; gap: 5px;">
+        <div style="display: flex; gap: 5px; align-items: center;">
+          <label for="nama" style="width: 100px;">Nama:</label>
+          <input id="nama" type="text" style="flex: 1; padding: 4px;" placeholder="Masukkan Nama Anda"></input>
+        </div>
+        <div style="display: flex; gap: 5px; align-items: center;">
+          <label for="nip" style="width: 100px;">NIP:</label>
+          <input id="nip" type="text" style="flex: 1; padding: 4px;" placeholder="Masukkan NIP Anda"></input>
+        </div>
+        <div style="display: flex; gap: 5px; align-items: center;">
+          <label for="jabatan" style="width: 100px;">Jabatan:</label>
+          <input id="jabatan" type="text" style="flex: 1; padding: 4px;" placeholder="Masukkan Jabatan Anda"></input>
+        </div>
+        <div style="display: flex; gap: 5px; align-items: center;">
+          <label for="unit-kerja" style="width: 100px;">Unit Kerja:</label>
+          <input id="unit-kerja" type="text" style="flex: 1; padding: 4px;"
+            placeholder="Masukkan Unit Kerja Anda"></input>
+        </div>
+      </div>
+    </div>
 
-  <button id="capture-docx">Export as DOCX</button>
-
-  <p>Data hanya diproses dan disimpan secara lokal di browser Anda. Kami tidak menyimpan data Anda sama sekali.</p>
+  </div>
+  <button id="capture-docx" style="background: #3E4095; color: white; flex: 1;">Ekspor ke DOCX</button>
+  <hr>
+  <h3 style="margin-top: 0; margin-bottom: 0px;">
+    <span class="blinking-text">Cara Penggunaan: </span><span
+      style="color: blue; text-decoration: underline; cursor: pointer;" id="toggle-help">Lihat</span>
+  </h3>
+  <ol id="instruction">
+    <li>Buka halaman E-Kinerja pada tab Mingguan.<a href="assets/page.png" target="_blank">(yg kaya gini)</a></li>
+    <li>Tekan tombol "Simpan Kinerja Pekan Ini" yang warna Kuning.</li>
+    <li>Lihat data yang tersimpan pada bagian "Data Tersimpan".</li>
+    <li>Pilih tanggal yang akan diekspor kinerjanya.</li>
+    <li>Tekan tombol "Ekspor Kinerja Terpilih" untuk mengunduh file DOCX.</li>
+  </ol>
+  <h4 style="color: red;">Data hanya diproses dan disimpan secara lokal di browser Anda. Kami tidak menyimpan data Anda
+    sama sekali.</h4>
   <!-- copyright, made with ❤️ by Ibnu Naufal -->
-  <p>© 2024 Rekap Kinerja Extension.
+  <h4>© 2025 Rekap Kinerja Extension.
     <br> Made with ❤️ by <a href="https://naufall.com" target="_blank">Naufal</a>
-  </p>
+  </h4>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
   <script src="libs/docx.js"></script>
   <script src="libs/FileSaver.js"></script>

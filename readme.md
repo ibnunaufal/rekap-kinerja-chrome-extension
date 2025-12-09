@@ -1,5 +1,5 @@
 
-
+![App Screenshot](icon-128.png?raw=true)
 # Rekap Kinerja
 
 Sebuah alat yang dapat membantu ASN pengguna E-Kinerja buatan BKN untuk merekap progress harian menjadi rekap mingguan dan bulanan (*segera)
@@ -10,11 +10,14 @@ Untuk saat ini ekstensi belum tersedia di Chrome Web Store, namun anda dapat men
 
 - Download file ```.crx``` [disini](crx/rekap-kinerja-chrome-extension.crx)
 - Install ekstensi dengan membuka file yang telah diunduh
+
+## Panduan Penggunaan
+
 - Setelah ekstensi terinstall, buka halaman ```eKinerja```, pastikan saat ini membuka tab ```Mingguan``` seperti tangkapan layar berikut
-![App Screenshot](screenshot/page.png?raw=true)
+![App Screenshot](assets/page.png?raw=true)
 - Click the extension, then click export to docx
 - Klik ekstensi, kemudian klik Export to docx
-![App Screenshot](screenshot/popup.png?raw=true)
+![App Screenshot](assets/popup.png?raw=true)
 - Voila! rekap berhasil terdownload dan siap untuk diedit😁
 
 ## Pembuat
@@ -34,10 +37,13 @@ Right now the extension hasn't published on Chrome Web Store but people can down
 
 - Download the ```.crx``` file [here]()
 - Install the extension by clicking the downloaded file
+
+## Usage Guide
+
 - After extension installed, open the ```eKinerja``` Page, make sure you are currently open the ```Mingguan``` Tab like the screenshot below
-![App Screenshot](https://github.com/ibnunaufal/rekap-kinerja-chrome-extension/blob/main/screenshot/page.png?raw=true)
+![App Screenshot](https://github.com/ibnunaufal/rekap-kinerja-chrome-extension/blob/main/assets/page.png?raw=true)
 - Click the extension, then click export to docx
-![App Screenshot](https://github.com/ibnunaufal/rekap-kinerja-chrome-extension/blob/main/screenshot/popup.png?raw=true)
+![App Screenshot](https://github.com/ibnunaufal/rekap-kinerja-chrome-extension/blob/main/assets/popup.png?raw=true)
 - Voila the recap has been downloaded and ready to be edited😁
 
 ## Authors

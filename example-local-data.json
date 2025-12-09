@@ -1,0 +1,12 @@
+[
+    {
+        "week": 46,
+        "year": 2023,
+        "month": 11,
+        "date": "2023-11-13",
+        "tasks": [
+            "Menyelesaikan fitur ekspor DOCX di ekstensi Chrome Rekap Kinerja",
+            "Memperbarui antarmuka pengguna popup.html untuk menambahkan tombol ekspor dan navigasi"
+        ]
+    }
+]

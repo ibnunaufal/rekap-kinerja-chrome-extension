@@ -1,0 +1,254 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Rekap Kinerja Editor</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap"
+    rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', Arial, sans-serif;
+      background: #ecdfb0;
+      color: #000;
+      padding: 20px;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 700px;
+      margin: 0 auto;
+      background: #fff;
+      padding: 40px;
+      border-radius: 15px;
+      border: 6px solid #000;
+      box-shadow: 12px 12px 0 #000;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+      padding: 20px;
+    }
+
+    p {
+      font-family: 'Plus Jakarta Sans', Arial, sans-serif;
+      font-weight: bold;
+      line-height: 1.6;
+      margin-bottom: 15px;
+      font-size: 1.1rem;
+    }
+
+    .form-group {
+      margin-top: 30px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 10px;
+      font-size: 1.1rem;
+      text-transform: uppercase;
+      font-weight: 900;
+    }
+
+    input[type="text"],
+    select {
+      width: 100%;
+      padding: 15px;
+      font-size: 1rem;
+      font-weight: bold;
+      border-radius: 15px;
+      border: 4px solid #000;
+      background: #fff;
+      box-shadow: 6px 6px 0 #000;
+      transition: all 0.1s;
+      font-family: 'Plus Jakarta Sans', Arial, sans-serif;
+
+    }
+
+    input[type="text"]:focus,
+    select:focus {
+      outline: none;
+      transform: translate(-2px, -2px);
+      box-shadow: 8px 8px 0 #ffb9b9;
+    }
+
+    input[type="text"]::placeholder {
+      color: #999;
+    }
+
+    input[type="checkbox"] {
+      width: 24px;
+      height: 24px;
+      border-radius: 6px;
+      border: 4px solid #000;
+      background: #fff;
+      cursor: pointer;
+      appearance: none;
+      box-shadow: 4px 4px 0 #000;
+      transition: all 0.1s;
+      flex-shrink: 0;
+    }
+
+    input[type="checkbox"]:checked {
+      background: #3E4095;
+      position: relative;
+    }
+
+    input[type="checkbox"]:checked::after {
+      content: '✓';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: #fff;
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    input[type="checkbox"]:hover {
+      transform: translate(-1px, -1px);
+      box-shadow: 5px 5px 0 #000;
+    }
+
+    select {
+      cursor: pointer;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 10px center;
+      padding-right: 40px;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    button {
+      margin-top: 40px;
+      width: 100%;
+      padding: 20px;
+      font-size: 1.3rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      background: #4ade80;
+      color: #000;
+      border-radius: 15px;
+      border: 5px solid #000;
+      box-shadow: 8px 8px 0 #000;
+      cursor: pointer;
+      transition: all 0.1s;
+      font-family: 'Plus Jakarta Sans', Arial, sans-serif;
+    }
+
+    button:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: 10px 10px 0 #000;
+    }
+
+    button:active {
+      transform: translate(4px, 4px);
+      box-shadow: 4px 4px 0 #000;
+    }
+
+    .intro-text {
+      background: #e0e7ff;
+      padding: 20px;
+      border-radius: 15px;
+      border: 4px solid #000;
+      margin-bottom: 30px;
+      box-shadow: 6px 6px 0 #000;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        padding: 20px;
+      }
+
+      h1 {
+        font-size: 1.8rem;
+        padding: 15px;
+      }
+
+      button {
+        font-size: 1.1rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h1>📊 Rekap Kinerja</h1>
+
+    <div class="intro-text">
+      <p>Selamat datang di halaman editor Rekap Kinerja. Di sini Anda dapat memilih dan menentukan periode waktu yang
+        ingin anda ekspor menjadi file docx.</p>
+      <p style="margin-bottom: 0;">Gunakan fitur-fitur di bawah ini untuk menyesuaikan data kinerja Anda sesuai
+        kebutuhan.</p>
+    </div>
+
+    <div class="form-group">
+      <label for="judul-dokumen">📄 Judul Dokumen:</label>
+      <input type="text" id="judul-dokumen" placeholder="Masukkan judul dokumen" value="Laporan Kinerja" />
+    </div>
+
+    <div class="form-group">
+      <label for="nama">👤 Nama:</label>
+      <input type="text" id="nama" placeholder="Masukkan nama Anda" />
+    </div>
+
+    <div class="form-group">
+      <label for="nip">🔢 NIP:</label>
+      <input type="text" id="nip" placeholder="Masukkan NIP Anda" />
+    </div>
+
+    <div class="form-group">
+      <label for="unit-kerja">🏢 Unit Kerja:</label>
+      <input type="text" id="unit-kerja" placeholder="Masukkan unit kerja Anda" />
+    </div>
+
+    <!-- checkbox, simpan identitas untuk penggunaan selanjutnya -->
+    <div class="form-group">
+      <label style="display: flex; align-items: center; cursor: pointer; text-transform: none; font-size: 1rem;">
+        <input type="checkbox" id="save-identity" style="margin-right: 10px;">
+        <span>💾 Simpan identitas untuk penggunaan selanjutnya</span>
+      </label>
+    </div>
+
+    <div class="form-group">
+      <label for="period-type">📅 Pilih Periode:</label>
+      <select id="period-type">
+        <option value="monthly">Bulanan</option>
+        <option value="weekly">Mingguan</option>
+      </select>
+    </div>
+
+    <div class="form-group hidden" id="monthly-period">
+      <label for="month-select">📆 Pilih Bulan:</label>
+      <select id="month-select">
+        <option value="">Pilih bulan...</option>
+      </select>
+    </div>
+
+    <div class="form-group hidden" id="weekly-period">
+      <label for="week-select">📊 Pilih Minggu:</label>
+      <select id="week-select">
+        <option value="">Pilih minggu...</option>
+      </select>
+    </div>
+
+    <button id="export-docx">🚀 Ekspor ke DOCX</button>
+  </div>
+
+  <script src="editor.js"></script>
+</body>
+
+</html>
