@@ -148,6 +148,35 @@
       padding-bottom: 5px;
     }
 
+    #signature-inputs {
+      height: 0px;
+      opacity: 0;
+      max-height: 0;
+      /* Or a fixed height if content size is known */
+      overflow: hidden;
+      transition: opacity 0.5s ease-in-out, max-height 0.5s ease-in-out;
+      margin: 0px;
+    }
+
+    #signature-inputs.visible {
+      height: auto;
+      opacity: 1;
+      max-height: 600px;
+      margin: 10px 0;
+      border: 2px solid black;
+      border-radius: 4px;
+      box-shadow: 0.1em 0.1em;
+      cursor: pointer;
+      padding-top: 5px;
+      padding-left: 20px;
+      padding-right: 5px;
+      padding-bottom: 5px;
+    }
+
+    .show-anchor {
+      display: flex !important;
+    }
+
     .blinking-text {
       padding: 5px;
       animation: blink-animation 1.5s steps(5, start) infinite;
@@ -199,8 +228,10 @@
     <button id="save-current" style="background: #3E4095; color: white; flex: 1;">Simpan Kinerja Pekan Ini</button>
   </div> -->
   <h3 style="margin: 0px;">Langkah 1. Simpan</h3>
-  <p style="margin: 2px 0px;">Buka e-Kinerja pada tab Mingguan <a href="assets/page.png" target="_blank">(yg kaya gini)</a>. <br>Lalu klik "Simpan Kinerja Pekan Ini".</p>
-  <button id="save-current" style="background: #fbca1f; flex: 1;">Simpan Kinerja Pekan Ini</button>
+  <p style="margin: 2px 0px;">Buka e-Kinerja pada tab Mingguan <a href="assets/page.png" target="_blank">(yg kaya
+      gini)</a>. <br>Lalu klik "Simpan Kinerja".</p>
+  <button id="save-current" style="background: #fbca1f; flex: 1;">Simpan Kinerja</button>
+  <p>Untuk menyimpan pekan lainnya, ulangi langkah ini pada tab Mingguan e-Kinerja yang berbeda.</p>
   <!-- button with open new tab icon -->
   <!-- <button id="open-editor" style="background: white">Buka Editor <img src="assets/ic-open-new-tab.svg" alt="Open New Tab" style="width:24px; height:24px; margin-left: 10px; vertical-align:middle;"></button> -->
 
@@ -256,6 +287,118 @@
     </div>
 
   </div>
+  <div style="margin: 10px 0px;">
+    <!-- Sertakan Kolom tanda tangan -->
+    <div style="display: flex; align-items: center; gap: 5px;" style="font-size: 14px;">
+      <input id="toggle-signature" type="checkbox"></input>
+      <label for="toggle-signature" style="font-size: 14px;">Sertakan kolom tanda tangan pada dokumen</label>
+    </div>
+    <div id="signature-inputs"
+      style="border: 2px solid black; padding: 5px; border-radius: 4px; box-shadow: 0.1em 0.1em; margin-top: 5px;">
+      <!-- select option -->
+      <div>
+        <div style="display: flex; gap: 5px; align-items: center; margin-bottom: 5px;">
+          <label for="city-name" style="flex: 1;">Nama Kota:</label>
+          <input id="city-name" type="text" style="flex: 3; padding: 4px;" placeholder="Masukkan Kota (Biasanya di sebelah tanggal itu)"></input>
+        </div>
+      </div>
+      <div style="display: flex; align-items: center;">
+        <label for="signature-count" style="flex: 1;">Penandatangan:</label>
+        <select id="signature-count" style="flex: 3; font-size: 14px; padding: 2px; margin-left: 5px;">
+          <option value="single">1 Penandatangan</option>
+          <option value="double">2 Penandatangan</option>
+          <option value="more" disabled>3 atau lebih (dalam pengembangan)</option>
+        </select>
+      </div>
+      <div style="display: flex; align-items: center; margin-top: 5px; gap: 5px;">
+        <input id="toggle-anchor" type="checkbox"></input>
+        <label for="toggle-anchor">Tambahkan anchor tanda tangan digital</label>
+      </div>
+      <hr>
+      <!-- single column -->
+      <div id="single-signer" style="margin-top: 5px;">
+        <div>
+            <label style="font-size: 14px; font-weight: bold;">Penandatangan 1</label> <br>
+            <label style="font-size: 12px; color: gray;"> (Untuk Anda sendiri)</label>
+            <div style="display: flex; gap: 5px; align-items: center; margin-bottom: 5px; margin-top: 5px;">
+              <label for="signer1-title-single" style="width: 80px;">Keterangan:</label>
+              <input id="signer1-title-single" type="text" style="flex: 1; padding: 4px;"
+                placeholder="Contoh: Staff XXX / Penyusun Laporan"></input>
+            </div>
+            <div style="display: flex; gap: 5px; align-items: center; margin-bottom: 5px;">
+              <label for="signer1-name-single" style="width: 80px;">Nama:</label>
+              <input id="signer1-name-single" type="text" style="flex: 1; padding: 4px;"
+                placeholder="Masukkan Nama Penandatangan 1"></input>
+            </div>
+            <div style="display: flex; gap: 5px; align-items: center;">
+              <label for="signer1-nip-single" style="width: 80px;">NIP:</label>
+              <input id="signer1-nip-single" type="text" style="flex: 1; padding: 4px;"
+                placeholder="Masukkan NIP Penandatangan 1"></input>
+            </div>
+            <!-- anchor show if checkbox clicked -->
+            <div id="signer1-anchor-single-container" style="gap: 5px; align-items: center; margin-top: 5px; display: none;">
+              <label for="signer1-anchor-single" style="width: 80px;">Anchor:</label>
+              <input id="signer1-anchor-single" type="text" style="flex: 1; padding: 4px;"
+                placeholder="Masukkan Anchor Penandatangan 1"></input>
+            </div>
+          </div>
+      </div>
+      <!-- two columns -->
+      <div id="double-signer" style="margin-top: 5px; display: none;">
+        <div>
+            <label style="font-size: 14px; font-weight: bold;">Penandatangan 1</label> <br>
+            <label style="font-size: 12px; color: gray;"> (Untuk atasan, contoh: Kepala Bagian XXX)</label>
+            <div style="display: flex; gap: 5px; align-items: center; margin-bottom: 5px; margin-top: 5px;">
+              <label for="signer1-title-double" style="width: 80px;">Keterangan:</label>
+              <input id="signer1-title-double" type="text" style="flex: 1; padding: 4px;"
+                placeholder="Contoh: Kepala Bagian XXX"></input>
+            </div>
+            <div style="display: flex; gap: 5px; align-items: center; margin-bottom: 5px;">
+              <label for="signer1-name-double" style="width: 80px;">Nama:</label>
+              <input id="signer1-name-double" type="text" style="flex: 1; padding: 4px;"
+                placeholder="Masukkan Nama Penandatangan 1"></input>
+            </div>
+            <div style="display: flex; gap: 5px; align-items: center;">
+              <label for="signer1-nip-double" style="width: 80px;">NIP:</label>
+              <input id="signer1-nip-double" type="text" style="flex: 1; padding: 4px;"
+                placeholder="Masukkan NIP Penandatangan 1"></input>
+            </div>
+            <!-- anchor show if checkbox clicked -->
+            <div id="signer1-anchor-double-container" style="display: flex; gap: 5px; align-items: center; margin-top: 5px; display: none;">
+              <label for="signer1-anchor-double" style="width: 80px;">Anchor:</label>
+              <input id="signer1-anchor-double" type="text" style="flex: 1; padding: 4px;"
+                placeholder="Masukkan Anchor Penandatangan 1"></input>
+            </div>
+          </div>
+          <hr>
+          <div>
+            <label style="font-size: 14px; font-weight: bold;">Penandatangan 2</label> <br>
+            <label style="font-size: 12px; color: gray;"> (Untuk Anda sendiri)</label>
+            <div style="display: flex; gap: 5px; align-items: center; margin-bottom: 5px; margin-top: 5px;">
+              <label for="signer2-title-double" style="width: 80px;">Keterangan:</label>
+              <input id="signer2-title-double" type="text" style="flex: 1; padding: 4px;"
+                placeholder="Contoh: Staff XXX / Penyusun Laporan"></input>
+            </div>
+            <div style="display: flex; gap: 5px; align-items: center; margin-bottom: 5px;">
+              <label for="signer2-name-double" style="width: 80px;">Nama:</label>
+              <input id="signer2-name-double" type="text" style="flex: 1; padding: 4px;"
+                placeholder="Masukkan Nama Penandatangan 2"></input>
+            </div>
+            <div style="display: flex; gap: 5px; align-items: center;">
+              <label for="signer2-nip-double" style="width: 80px;">NIP:</label>
+              <input id="signer2-nip-double" type="text" style="flex: 1; padding: 4px;"
+                placeholder="Masukkan NIP Penandatangan 2"></input>
+            </div>
+            <!-- anchor show if checkbox clicked -->
+            <div id="signer2-anchor-double-container" style="display: flex; gap: 5px; align-items: center; margin-top: 5px; display: none;">
+              <label for="signer2-anchor-double" style="width: 80px;">Anchor:</label>
+              <input id="signer2-anchor-double" type="text" style="flex: 1; padding: 4px;"
+                placeholder="Masukkan Anchor Penandatangan 2"></input>
+            </div>
+          </div>
+      </div>
+    </div>
+  </div>
   <button id="capture-docx" style="background: #3E4095; color: white; flex: 1;">Ekspor ke DOCX</button>
   <hr>
   <h3 style="margin-top: 0; margin-bottom: 0px;">
@@ -264,7 +407,7 @@
   </h3>
   <ol id="instruction">
     <li>Buka halaman E-Kinerja pada tab Mingguan.<a href="assets/page.png" target="_blank">(yg kaya gini)</a></li>
-    <li>Tekan tombol "Simpan Kinerja Pekan Ini" yang warna Kuning.</li>
+    <li>Tekan tombol "Simpan Kinerja" yang warna Kuning.</li>
     <li>Lihat data yang tersimpan pada bagian "Data Tersimpan".</li>
     <li>Pilih tanggal yang akan diekspor kinerjanya.</li>
     <li>Tekan tombol "Ekspor Kinerja Terpilih" untuk mengunduh file DOCX.</li>

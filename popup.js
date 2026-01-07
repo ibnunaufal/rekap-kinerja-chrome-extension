@@ -4,12 +4,19 @@ document.getElementById("capture-docx").addEventListener("click", () => {
     try {
       const currentUrl = tabs[0].url;
       console.log("Current URL:", currentUrl);
-      if (currentUrl.includes("chrome://extensions") || currentUrl.includes("chrome://newtab")) {
-        alert("Silakan buka halaman eKinerja pada tab Mingguan terlebih dahulu.");
+      if (
+        currentUrl.includes("chrome://extensions") ||
+        currentUrl.includes("chrome://newtab")
+      ) {
+        alert(
+          "Silakan buka halaman eKinerja pada tab Mingguan terlebih dahulu."
+        );
         return;
       }
       if (!currentUrl.includes("kinerja.bkn.go.id/kinerja_harian")) {
-        alert("Silakan buka halaman eKinerja pada tab Mingguan terlebih dahulu.");
+        alert(
+          "Silakan buka halaman eKinerja pada tab Mingguan terlebih dahulu."
+        );
         return;
       }
       // First, inject the docx library
@@ -25,8 +32,7 @@ document.getElementById("capture-docx").addEventListener("click", () => {
         name: "",
         nip: "",
         position: "",
-        unit: ""
-
+        unit: "",
       };
       if (includeIdentity) {
         const name = document.getElementById("nama").value.trim();
@@ -37,6 +43,72 @@ document.getElementById("capture-docx").addEventListener("click", () => {
         console.log("Identity Data to inject:", identityData);
         await chrome.storage.local.set({
           identityData: JSON.stringify(identityData),
+        });
+      }
+
+      // ================ Get Signature Option ==================
+      const includeSignature =
+        document.getElementById("toggle-signature").checked;
+      const signatureCount = document.getElementById("signature-count").value;
+      let signatureData = {
+        cityName: document.getElementById("city-name").value.trim(),
+        type: signatureCount, //or "double"
+        useAnchor: document.getElementById("toggle-anchor").checked, //or false
+        signer:
+          signatureCount === "single"
+            ? // single signer
+              [
+                {
+                  name: document
+                    .getElementById("signer1-name-single")
+                    .value.trim(),
+                  nip: document
+                    .getElementById("signer1-nip-single")
+                    .value.trim(),
+                  title: document
+                    .getElementById("signer1-title-single")
+                    .value.trim(),
+                  anchor: document
+                    .getElementById("signer1-anchor-single")
+                    .value.trim(),
+                },
+              ]
+            : // double signer
+              [
+                {
+                  name: document
+                    .getElementById("signer1-name-double")
+                    .value.trim(),
+                  nip: document
+                    .getElementById("signer1-nip-double")
+                    .value.trim(),
+                  title: document
+                    .getElementById("signer1-title-double")
+                    .value.trim(),
+                  anchor: document
+                    .getElementById("signer1-anchor-double")
+                    .value.trim(),
+                },
+                {
+                  name: document
+                    .getElementById("signer2-name-double")
+                    .value.trim(),
+                  nip: document
+                    .getElementById("signer2-nip-double")
+                    .value.trim(),
+                  title: document
+                    .getElementById("signer2-title-double")
+                    .value.trim(),
+                  anchor: document
+                    .getElementById("signer2-anchor-double")
+                    .value.trim(),
+                },
+              ],
+      };
+      if (includeSignature) {
+        console.log("Signature Data to inject:", signatureData);
+        await chrome.storage.local.set({
+          signatureData: JSON.stringify(signatureData),
         });
       }
 
@@ -76,15 +148,43 @@ document.getElementById("capture-docx").addEventListener("click", () => {
         return aDate - bDate;
       });
 
+      // check the completeness of identityData if includeIdentity is true
+      // also check the completeness of signatureData if includeSignature is true
+      if (includeIdentity) {
+        if (
+          !identityData.name ||
+          !identityData.nip ||
+          !identityData.position ||
+          !identityData.unit
+        ) {
+          alert("Mohon lengkapi data identitas sebelum mengekspor.");
+          return;
+        }
+      }
+      if (includeSignature) {
+        for (const signer of signatureData.signer) {
+          if (!signer.name || !signer.nip || !signer.title) {
+            alert("Mohon lengkapi data tanda tangan sebelum mengekspor.");
+            return;
+          }
+          if (signatureData.useAnchor && !signer.anchor) {
+            alert(
+              "Mohon lengkapi data anchor tanda tangan sebelum mengekspor."
+            );
+            return;
+          }
+        }
+      }
+
       // Then execute your function
       await chrome.scripting.executeScript({
         target: { tabId: tabId },
         function: exportToFile,
-        args: ["docx", selectedDates, identityData],
+        args: ["docx", selectedDates, identityData, signatureData],
       });
     } catch (error) {
       console.error("Error:", error);
-      alert(`Failed to capture. Check console for details. ${error.message}`);
+      alert(`Failed to export. Check console for details. ${error.message}`);
     }
   });
 });
@@ -107,6 +207,48 @@ document.getElementById("toggle-identity").addEventListener("change", (e) => {
   const identityInputs = document.getElementById("identity-inputs");
   identityInputs.classList.toggle("visible", e.target.checked);
 });
+
+document.getElementById("toggle-signature").addEventListener("change", (e) => {
+  const signatureInputs = document.getElementById("signature-inputs");
+  signatureInputs.classList.toggle("visible", e.target.checked);
+});
+
+document.getElementById("toggle-anchor").addEventListener("change", (e) => {
+  const anchorContainers = [
+    document.getElementById("signer1-anchor-double-container"),
+    document.getElementById("signer2-anchor-double-container"),
+    document.getElementById("signer1-anchor-single-container"),
+  ];
+  anchorContainers.forEach((anchorContainer) => {
+    anchorContainer.classList.toggle("show-anchor", e.target.checked);
+  });
+  const anchorInputs = [
+    document.getElementById("signer1-anchor-double"),
+    document.getElementById("signer2-anchor-double"),
+    document.getElementById("signer1-anchor-single"),
+  ];
+  if (!e.target.checked) {
+    // clear all anchor input values
+    anchorInputs.forEach((anchorInput) => {
+      anchorInput.value = "";
+    });
+  }
+});
+
+document.getElementById("signature-count").addEventListener("change", (e) => {
+  // if value is "single"
+  const singleSignerContainer = document.getElementById("single-signer");
+  const doubleSignerContainer = document.getElementById("double-signer");
+
+  if (e.target.value === "single") {
+    singleSignerContainer.style.display = "block";
+    doubleSignerContainer.style.display = "none";
+  } else {
+    singleSignerContainer.style.display = "none";
+    doubleSignerContainer.style.display = "block";
+  }
+});
+
 document.getElementById("save-current").addEventListener("click", () => {
   chrome.tabs.query({ active: true, currentWindow: true }, async (tabs) => {
     const tabId = tabs[0].id;
@@ -198,8 +340,8 @@ async function save(currentUrl) {
 
     // get chrome local storage
     const savedKinerjaPage = await chrome.storage.local
-    .get("savedKinerjaPage")
-    .then((result) => result.savedKinerjaPage);
+      .get("savedKinerjaPage")
+      .then((result) => result.savedKinerjaPage);
 
     var localData = localStorage.getItem("savedKinerjaPage");
     var parsedLocalData = savedKinerjaPage ? JSON.parse(savedKinerjaPage) : [];
@@ -225,17 +367,26 @@ async function save(currentUrl) {
 
     console.log("Capitalized Name:", name);
 
+    // const allCells = document.querySelectorAll(".vuecal__cell");
+    // allCells.forEach((cell, index) => {
+    //   // show all class in the cell
+    //   console.log(`Cell ${index} classes:`, cell.className);
+    // });
+
     const cellHasEvents = document.querySelectorAll(
-      ".vuecal__cell.vuecal__cell--has-events"
+      ".vuecal__cell"
+      // "vuecal__event-title"
     );
     cellHasEvents.forEach((cell, index) => {
-      data.push({
-        date: weekDates[index],
-        //   capture all item that has class vuecal__event-title inside the cell
-        activities: Array.from(
-          cell.querySelectorAll(".vuecal__event-title")
-        ).map((eventEl) => eventEl.innerText),
-      });
+      if (cell.classList.contains("vuecal__cell--has-events")) {
+        data.push({
+          date: weekDates[index],
+          //   capture all item that has class vuecal__event-title inside the cell
+          activities: Array.from(
+            cell.querySelectorAll(".vuecal__event-title")
+          ).map((eventEl) => eventEl.innerText),
+        });
+      }
     });
 
     var monthlyPeriod = document
@@ -280,7 +431,7 @@ async function save(currentUrl) {
     // merge parsedLocalData with newData, but replace duplicate same date entry
     console.log("Previous data", parsedLocalData);
     var mergedData = [...parsedLocalData];
-    console.log("mergedData before forEach", mergedData)
+    console.log("mergedData before forEach", mergedData);
     newData.forEach((newEntry) => {
       const exists = mergedData.some(
         (existingEntry) => existingEntry.date === newEntry.date
@@ -672,7 +823,12 @@ async function captureAndDownload(format, currentUrl) {
 }
 
 // export to file from localStorage
-async function exportToFile(format, selectedDates, identityData) {
+async function exportToFile(
+  format,
+  selectedDates,
+  identityData,
+  signatureData
+) {
   console.log("exportToFile called with format:", format);
   // get from chrome.storage.local as well
 
@@ -695,9 +851,164 @@ async function exportToFile(format, selectedDates, identityData) {
         TextRun,
         WidthType,
         AlignmentType,
+        BorderStyle,
       } = docx;
 
-      const table = new Table({
+      const includeSignature = signatureData && signatureData.signer.length > 0;
+
+      /** create two column table like this:
+       *  if double signature:
+       *  |                               | Semarang, [date now in DD MMM YYYY] |
+       *  |Mengetahui,                    |                                     |
+       *  |[signer1 title]                | [signer2 title]                     |
+       *  |[anchor (if useAnchor)]        |                                     |
+       *  |[signer1 name]                 | [signer2 name]                      |
+       *  |[signer1 nip]                  | [signer2 nip]                       |
+       *
+       *   if single signature:
+       *  |                               | Semarang, [date now in DD MMM YYYY] |
+       *  |                               |[signer1 title]                      |
+       *  |                               |[anchor (if useAnchor)]              |
+       *  |                               |[signer1 name]                       |
+       *  |                               |[signer1 nip]                        |
+       */
+
+      const FONT = "Arial";
+      const FONT_SIZE = 24;
+      console.log("declared NO_BORDER");
+      const NO_BORDER = {
+        top: { style: BorderStyle.NONE, size: 0, color: "FFFFFF" },
+        bottom: { style: BorderStyle.NONE, size: 0, color: "FFFFFF" },
+        left: { style: BorderStyle.NONE, size: 0, color: "FFFFFF" },
+        right: { style: BorderStyle.NONE, size: 0, color: "FFFFFF" },
+      };
+      const CELL_MARGINS = {
+        top: 100,
+        bottom: 100,
+        left: 100,
+        right: 100,
+      };
+      const CELL_MARGINS_ANCHOR = {
+        top: 1200,
+        bottom: 100,
+        left: 100,
+        right: 100,
+      };
+
+      console.log("declared tableBorders");
+      const tableBorders = {
+        top: NO_BORDER.top,
+        bottom: NO_BORDER.bottom,
+        left: NO_BORDER.left,
+        right: NO_BORDER.right,
+        insideHorizontal: NO_BORDER.top,
+        insideVertical: NO_BORDER.left,
+      };
+
+      
+
+      const textRun = (text = "") =>
+        new TextRun({
+          text,
+          size: FONT_SIZE,
+          font: FONT,
+        });
+
+      const paragraph = (text = "", align = AlignmentType.LEFT) =>
+        new Paragraph({
+          children: [textRun(text)],
+          alignment: align,
+        });
+
+      console.log("declared cell");
+      const cell = (text = "", align = AlignmentType.LEFT) =>
+        new TableCell({
+          width: {
+            size: 50,
+            type: WidthType.PERCENTAGE,
+          },
+          children: [paragraph(text, align)],
+          margins: CELL_MARGINS,
+          borders: NO_BORDER,
+        });
+
+      const row = (cells) =>
+        new TableRow({
+          children: cells.map((text) => cell(text)),
+        });
+
+      const cellAnchor = (text = "", align = AlignmentType.LEFT) =>
+        new TableCell({
+          width: {
+            size: 50,
+            type: WidthType.PERCENTAGE,
+          },
+          children: [paragraph(text, align)],
+          margins: CELL_MARGINS_ANCHOR,
+          borders: NO_BORDER,
+        });
+      const rowAnchor = (cells) =>
+        new TableRow({
+          children: cells.map((text) => cellAnchor(text)),
+        });
+        
+      const formattedDate = new Date().toLocaleDateString("id-ID", {
+        day: "2-digit",
+        month: "long",
+        year: "numeric",
+      });
+
+      console.log(
+        "declared buildSingleSignatureTable and buildDoubleSignatureTable"
+      );
+      const buildSingleSignatureTable = (signatureData) =>
+        new Table({
+          borders: tableBorders,
+          width: { size: 100, type: WidthType.PERCENTAGE },
+          rows: [
+            row(["", `${signatureData.cityName}, ${formattedDate}`]),
+            row(["", signatureData.signer[0].title]),
+            rowAnchor(
+              signatureData.useAnchor
+                ? ["", signatureData.signer[0].anchor]
+                : ["", ""]
+            ),
+            row(["", signatureData.signer[0].name]),
+            row(["", `NIP. ${signatureData.signer[0].nip}`]),
+          ],
+        });
+
+      const buildDoubleSignatureTable = (signatureData) =>
+        new Table({
+          borders: tableBorders,
+          width: { size: 100, type: WidthType.PERCENTAGE },
+          rows: [
+            row(["", `${signatureData.cityName}, ${formattedDate}`]),
+            row(["Mengetahui,", ""]),
+            row([signatureData.signer[0].title, signatureData.signer[1].title]),
+            rowAnchor(
+              signatureData.useAnchor
+                ? [signatureData.signer[0].anchor, signatureData.signer[1].anchor]
+                : ["", ""]
+            ),
+            row([signatureData.signer[0].name, signatureData.signer[1].name]),
+            row([
+              `NIP. ${signatureData.signer[0].nip}`,
+              `NIP. ${signatureData.signer[1].nip}`,
+            ]),
+          ],
+        });
+
+      let signatureTable = null;
+
+      if (includeSignature) {
+        signatureTable =
+          signatureData.type === "single"
+            ? buildSingleSignatureTable(signatureData)
+            : buildDoubleSignatureTable(signatureData);
+      }
+
+      const contentTable = new Table({
         width: {
           size: 100,
           type: WidthType.PERCENTAGE,
@@ -931,7 +1242,9 @@ async function exportToFile(format, selectedDates, identityData) {
                   after: 100,
                 },
               }),
-              table,
+              contentTable,
+              new Paragraph({}), // empty paragraph for spacing
+              includeSignature ? signatureTable : null,
             ],
           },
         ],
@@ -944,7 +1257,7 @@ async function exportToFile(format, selectedDates, identityData) {
         const currentDateTime = new Date();
         const a = document.createElement("a");
         a.href = url;
-        
+
         a.download = `kinerja_${currentDateTime.toISOString()}.docx`;
         document.body.appendChild(a);
         a.click();
@@ -985,7 +1298,8 @@ document.addEventListener("DOMContentLoaded", async function () {
     container.style.alignItems = "center";
     container.style.color = "red";
     container.style.fontSize = "14px";
-    container.innerText = "Belum ada data eKinerja yang disimpan.\nSilahkan ikuti langkah 1 untuk menyimpan data.";
+    container.innerText =
+      "Belum ada data eKinerja yang disimpan.\nSilahkan ikuti langkah 1 untuk menyimpan data.";
   }
 
   /*
@@ -1130,6 +1444,58 @@ document.addEventListener("DOMContentLoaded", async function () {
       document.getElementById("nip").value = identityData.nip || "";
       document.getElementById("jabatan").value = identityData.position || "";
       document.getElementById("unit-kerja").value = identityData.unit || "";
+    }
+
+    const signatureData = await chrome.storage.local
+      .get("signatureData")
+      .then((result) => JSON.parse(result.signatureData));
+    if (signatureData) {
+      console.log("Found signatureData in chrome.storage.local:", signatureData);
+      document.getElementById("toggle-signature").checked = true;
+      document.getElementById("signature-inputs").classList.add("visible");
+      const typeSelect = document.getElementById("signature-count");
+      const useAnchor = signatureData.useAnchor || false;
+      const toggleAnchor = document.getElementById("toggle-anchor");
+      typeSelect.value = signatureData.type || "single";
+      // trigger change event to show/hide signer inputs
+      typeSelect.dispatchEvent(new Event("change"));
+      // fill city name and useAnchor
+      document.getElementById("city-name").value =
+        signatureData.cityName || "";
+      toggleAnchor.checked = useAnchor;
+      toggleAnchor.dispatchEvent(new Event("change"));
+      // fill signer data
+      if (signatureData.type === "single") {
+        // document.getElementById("single-signer").style.display = "block";
+        // document.getElementById("double-signer").style.display = "none";
+        document.getElementById("signer1-title-single").value =
+          signatureData.signer[0].title || "";
+        document.getElementById("signer1-anchor-single").value =
+          signatureData.signer[0].anchor || "";
+        document.getElementById("signer1-name-single").value =
+          signatureData.signer[0].name || "";
+        document.getElementById("signer1-nip-single").value =
+          signatureData.signer[0].nip || "";
+      } else if (signatureData.type === "double") {
+        // document.getElementById("single-signer").style.display = "none";
+        // document.getElementById("double-signer").style.display = "block";
+        document.getElementById("signer1-title-double").value =
+          signatureData.signer[0].title || "";
+        document.getElementById("signer1-anchor-double").value =
+          signatureData.signer[0].anchor || "";
+        document.getElementById("signer1-name-double").value =
+          signatureData.signer[0].name || "";
+        document.getElementById("signer1-nip-double").value =
+          signatureData.signer[0].nip || "";
+        document.getElementById("signer2-title-double").value =
+          signatureData.signer[1].title || "";
+        document.getElementById("signer2-anchor-double").value =
+          signatureData.signer[1].anchor || "";
+        document.getElementById("signer2-name-double").value =
+          signatureData.signer[1].name || "";
+        document.getElementById("signer2-nip-double").value =
+          signatureData.signer[1].nip || "";
+      }
     }
   }
 

@@ -3,7 +3,7 @@
   "name": "Rekap E-Kinerja",
   "version": "1.0",
   "description": "Capture the daily performance report from e-Kinerja and download it as an DOCX file.",
-  "permissions": ["activeTab", "scripting", "downloads", "storage"],
+  "permissions": ["activeTab", "scripting", "storage"],
   "action": {
     "default_popup": "popup.html",
     "default_icon": {
