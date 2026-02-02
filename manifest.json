@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Rekap E-Kinerja",
-  "version": "1.0",
+  "version": "1.2",
   "description": "Capture the daily performance report from e-Kinerja and download it as an DOCX file.",
   "permissions": ["activeTab", "scripting", "storage"],
   "action": {

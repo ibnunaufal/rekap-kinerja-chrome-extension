@@ -251,7 +251,10 @@
     Pilih tanggal kinerja yang sudah disimpan untuk diekspor ke file DOCX.
   </p>
   <div>
-    <h4 style="margin-bottom: 3px;">Data Tersimpan</h4>
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+      <h4 style="margin-bottom: 3px;">Data Tersimpan</h4>
+      <h4 id="delete-selected-data" style="display: none; margin-bottom: 3px; color: red; cursor: pointer; text-decoration: underline;">Hapus Data Terpilih</h4>
+    </div>
     <div id="saved-data-container"
       style="overflow-y: auto; border: 2px solid black; padding: 5px; border-radius: 4px; box-shadow: 0.1em 0.1em;">
       <!-- saved data will be shown here -->
@@ -299,7 +302,8 @@
       <div>
         <div style="display: flex; gap: 5px; align-items: center; margin-bottom: 5px;">
           <label for="city-name" style="flex: 1;">Nama Kota:</label>
-          <input id="city-name" type="text" style="flex: 3; padding: 4px;" placeholder="Masukkan Kota (Biasanya di sebelah tanggal itu)"></input>
+          <input id="city-name" type="text" style="flex: 3; padding: 4px;"
+            placeholder="Masukkan Kota (Biasanya di sebelah tanggal itu)"></input>
         </div>
       </div>
       <div style="display: flex; align-items: center;">
@@ -318,84 +322,87 @@
       <!-- single column -->
       <div id="single-signer" style="margin-top: 5px;">
         <div>
-            <label style="font-size: 14px; font-weight: bold;">Penandatangan 1</label> <br>
-            <label style="font-size: 12px; color: gray;"> (Untuk Anda sendiri)</label>
-            <div style="display: flex; gap: 5px; align-items: center; margin-bottom: 5px; margin-top: 5px;">
-              <label for="signer1-title-single" style="width: 80px;">Keterangan:</label>
-              <input id="signer1-title-single" type="text" style="flex: 1; padding: 4px;"
-                placeholder="Contoh: Staff XXX / Penyusun Laporan"></input>
-            </div>
-            <div style="display: flex; gap: 5px; align-items: center; margin-bottom: 5px;">
-              <label for="signer1-name-single" style="width: 80px;">Nama:</label>
-              <input id="signer1-name-single" type="text" style="flex: 1; padding: 4px;"
-                placeholder="Masukkan Nama Penandatangan 1"></input>
-            </div>
-            <div style="display: flex; gap: 5px; align-items: center;">
-              <label for="signer1-nip-single" style="width: 80px;">NIP:</label>
-              <input id="signer1-nip-single" type="text" style="flex: 1; padding: 4px;"
-                placeholder="Masukkan NIP Penandatangan 1"></input>
-            </div>
-            <!-- anchor show if checkbox clicked -->
-            <div id="signer1-anchor-single-container" style="gap: 5px; align-items: center; margin-top: 5px; display: none;">
-              <label for="signer1-anchor-single" style="width: 80px;">Anchor:</label>
-              <input id="signer1-anchor-single" type="text" style="flex: 1; padding: 4px;"
-                placeholder="Masukkan Anchor Penandatangan 1"></input>
-            </div>
+          <label style="font-size: 14px; font-weight: bold;">Penandatangan 1</label> <br>
+          <label style="font-size: 12px; color: gray;"> (Untuk Anda sendiri)</label>
+          <div style="display: flex; gap: 5px; align-items: center; margin-bottom: 5px; margin-top: 5px;">
+            <label for="signer1-title-single" style="width: 80px;">Keterangan:</label>
+            <input id="signer1-title-single" type="text" style="flex: 1; padding: 4px;"
+              placeholder="Contoh: Staff XXX / Penyusun Laporan"></input>
           </div>
+          <div style="display: flex; gap: 5px; align-items: center; margin-bottom: 5px;">
+            <label for="signer1-name-single" style="width: 80px;">Nama:</label>
+            <input id="signer1-name-single" type="text" style="flex: 1; padding: 4px;"
+              placeholder="Masukkan Nama Penandatangan 1"></input>
+          </div>
+          <div style="display: flex; gap: 5px; align-items: center;">
+            <label for="signer1-nip-single" style="width: 80px;">NIP:</label>
+            <input id="signer1-nip-single" type="text" style="flex: 1; padding: 4px;"
+              placeholder="Masukkan NIP Penandatangan 1"></input>
+          </div>
+          <!-- anchor show if checkbox clicked -->
+          <div id="signer1-anchor-single-container"
+            style="gap: 5px; align-items: center; margin-top: 5px; display: none;">
+            <label for="signer1-anchor-single" style="width: 80px;">Anchor:</label>
+            <input id="signer1-anchor-single" type="text" style="flex: 1; padding: 4px;"
+              placeholder="Masukkan Anchor Penandatangan 1"></input>
+          </div>
+        </div>
       </div>
       <!-- two columns -->
       <div id="double-signer" style="margin-top: 5px; display: none;">
         <div>
-            <label style="font-size: 14px; font-weight: bold;">Penandatangan 1</label> <br>
-            <label style="font-size: 12px; color: gray;"> (Untuk atasan, contoh: Kepala Bagian XXX)</label>
-            <div style="display: flex; gap: 5px; align-items: center; margin-bottom: 5px; margin-top: 5px;">
-              <label for="signer1-title-double" style="width: 80px;">Keterangan:</label>
-              <input id="signer1-title-double" type="text" style="flex: 1; padding: 4px;"
-                placeholder="Contoh: Kepala Bagian XXX"></input>
-            </div>
-            <div style="display: flex; gap: 5px; align-items: center; margin-bottom: 5px;">
-              <label for="signer1-name-double" style="width: 80px;">Nama:</label>
-              <input id="signer1-name-double" type="text" style="flex: 1; padding: 4px;"
-                placeholder="Masukkan Nama Penandatangan 1"></input>
-            </div>
-            <div style="display: flex; gap: 5px; align-items: center;">
-              <label for="signer1-nip-double" style="width: 80px;">NIP:</label>
-              <input id="signer1-nip-double" type="text" style="flex: 1; padding: 4px;"
-                placeholder="Masukkan NIP Penandatangan 1"></input>
-            </div>
-            <!-- anchor show if checkbox clicked -->
-            <div id="signer1-anchor-double-container" style="display: flex; gap: 5px; align-items: center; margin-top: 5px; display: none;">
-              <label for="signer1-anchor-double" style="width: 80px;">Anchor:</label>
-              <input id="signer1-anchor-double" type="text" style="flex: 1; padding: 4px;"
-                placeholder="Masukkan Anchor Penandatangan 1"></input>
-            </div>
+          <label style="font-size: 14px; font-weight: bold;">Penandatangan 1</label> <br>
+          <label style="font-size: 12px; color: gray;"> (Untuk atasan, contoh: Kepala Bagian XXX)</label>
+          <div style="display: flex; gap: 5px; align-items: center; margin-bottom: 5px; margin-top: 5px;">
+            <label for="signer1-title-double" style="width: 80px;">Keterangan:</label>
+            <input id="signer1-title-double" type="text" style="flex: 1; padding: 4px;"
+              placeholder="Contoh: Kepala Bagian XXX"></input>
           </div>
-          <hr>
-          <div>
-            <label style="font-size: 14px; font-weight: bold;">Penandatangan 2</label> <br>
-            <label style="font-size: 12px; color: gray;"> (Untuk Anda sendiri)</label>
-            <div style="display: flex; gap: 5px; align-items: center; margin-bottom: 5px; margin-top: 5px;">
-              <label for="signer2-title-double" style="width: 80px;">Keterangan:</label>
-              <input id="signer2-title-double" type="text" style="flex: 1; padding: 4px;"
-                placeholder="Contoh: Staff XXX / Penyusun Laporan"></input>
-            </div>
-            <div style="display: flex; gap: 5px; align-items: center; margin-bottom: 5px;">
-              <label for="signer2-name-double" style="width: 80px;">Nama:</label>
-              <input id="signer2-name-double" type="text" style="flex: 1; padding: 4px;"
-                placeholder="Masukkan Nama Penandatangan 2"></input>
-            </div>
-            <div style="display: flex; gap: 5px; align-items: center;">
-              <label for="signer2-nip-double" style="width: 80px;">NIP:</label>
-              <input id="signer2-nip-double" type="text" style="flex: 1; padding: 4px;"
-                placeholder="Masukkan NIP Penandatangan 2"></input>
-            </div>
-            <!-- anchor show if checkbox clicked -->
-            <div id="signer2-anchor-double-container" style="display: flex; gap: 5px; align-items: center; margin-top: 5px; display: none;">
-              <label for="signer2-anchor-double" style="width: 80px;">Anchor:</label>
-              <input id="signer2-anchor-double" type="text" style="flex: 1; padding: 4px;"
-                placeholder="Masukkan Anchor Penandatangan 2"></input>
-            </div>
+          <div style="display: flex; gap: 5px; align-items: center; margin-bottom: 5px;">
+            <label for="signer1-name-double" style="width: 80px;">Nama:</label>
+            <input id="signer1-name-double" type="text" style="flex: 1; padding: 4px;"
+              placeholder="Masukkan Nama Penandatangan 1"></input>
           </div>
+          <div style="display: flex; gap: 5px; align-items: center;">
+            <label for="signer1-nip-double" style="width: 80px;">NIP:</label>
+            <input id="signer1-nip-double" type="text" style="flex: 1; padding: 4px;"
+              placeholder="Masukkan NIP Penandatangan 1"></input>
+          </div>
+          <!-- anchor show if checkbox clicked -->
+          <div id="signer1-anchor-double-container"
+            style="display: flex; gap: 5px; align-items: center; margin-top: 5px; display: none;">
+            <label for="signer1-anchor-double" style="width: 80px;">Anchor:</label>
+            <input id="signer1-anchor-double" type="text" style="flex: 1; padding: 4px;"
+              placeholder="Masukkan Anchor Penandatangan 1"></input>
+          </div>
+        </div>
+        <hr>
+        <div>
+          <label style="font-size: 14px; font-weight: bold;">Penandatangan 2</label> <br>
+          <label style="font-size: 12px; color: gray;"> (Untuk Anda sendiri)</label>
+          <div style="display: flex; gap: 5px; align-items: center; margin-bottom: 5px; margin-top: 5px;">
+            <label for="signer2-title-double" style="width: 80px;">Keterangan:</label>
+            <input id="signer2-title-double" type="text" style="flex: 1; padding: 4px;"
+              placeholder="Contoh: Staff XXX / Penyusun Laporan"></input>
+          </div>
+          <div style="display: flex; gap: 5px; align-items: center; margin-bottom: 5px;">
+            <label for="signer2-name-double" style="width: 80px;">Nama:</label>
+            <input id="signer2-name-double" type="text" style="flex: 1; padding: 4px;"
+              placeholder="Masukkan Nama Penandatangan 2"></input>
+          </div>
+          <div style="display: flex; gap: 5px; align-items: center;">
+            <label for="signer2-nip-double" style="width: 80px;">NIP:</label>
+            <input id="signer2-nip-double" type="text" style="flex: 1; padding: 4px;"
+              placeholder="Masukkan NIP Penandatangan 2"></input>
+          </div>
+          <!-- anchor show if checkbox clicked -->
+          <div id="signer2-anchor-double-container"
+            style="display: flex; gap: 5px; align-items: center; margin-top: 5px; display: none;">
+            <label for="signer2-anchor-double" style="width: 80px;">Anchor:</label>
+            <input id="signer2-anchor-double" type="text" style="flex: 1; padding: 4px;"
+              placeholder="Masukkan Anchor Penandatangan 2"></input>
+          </div>
+        </div>
       </div>
     </div>
   </div>

@@ -9,7 +9,7 @@ document.getElementById("export-to-docx").addEventListener("click", () => {
         currentUrl.includes("chrome://newtab")
       ) {
         alert(
-          "Mohon tidak mengakses Ekstensi dari halaman tab Baru (chrome://newtab) atau Ekstensi (chrome://extensions)."
+          "Mohon tidak mengakses Ekstensi dari halaman tab Baru (chrome://newtab) atau Ekstensi (chrome://extensions).",
         );
         return;
       }
@@ -105,8 +105,7 @@ document.getElementById("export-to-docx").addEventListener("click", () => {
         await chrome.storage.local.set({
           signatureData: JSON.stringify(signatureData),
         });
-      }
-      else {
+      } else {
         await chrome.storage.local.set({
           signatureData: JSON.stringify({}),
         });
@@ -128,11 +127,11 @@ document.getElementById("export-to-docx").addEventListener("click", () => {
       const selectedDates = [];
       parsedData.forEach((entry) => {
         const checkbox = document.getElementById(
-          `week-${entry.week}-date-${entry.date}`
+          `week-${entry.week}-date-${entry.date}`,
         );
         console.log(
           `week-${entry.week}-date-${entry.date} checkbox:`,
-          checkbox
+          checkbox,
         );
         if (checkbox && checkbox.checked) {
           selectedDates.push(entry);
@@ -169,7 +168,7 @@ document.getElementById("export-to-docx").addEventListener("click", () => {
           }
           if (signatureData.useAnchor && !signer.anchor) {
             alert(
-              "Mohon lengkapi data anchor tanda tangan sebelum mengekspor."
+              "Mohon lengkapi data anchor tanda tangan sebelum mengekspor.",
             );
             return;
           }
@@ -273,6 +272,46 @@ document.getElementById("save-current").addEventListener("click", () => {
   });
 });
 
+document
+  .getElementById("delete-selected-data")
+  .addEventListener("click", async () => {
+    console.log("Delete selected data:", checkedDates);
+    if (checkedDates.length === 0) {
+      alert("Mohon pilih minimal satu tanggal untuk dihapus.");
+      return;
+    }
+    try {
+      // get from chrome.storage.local as well
+      const savedKinerjaPage = await chrome.storage.local
+        .get("savedKinerjaPage")
+        .then((result) => result.savedKinerjaPage);
+      if (!savedKinerjaPage) {
+        alert("No saved eKinerja data found in local storage.");
+        return;
+      }
+      const parsedData = JSON.parse(savedKinerjaPage);
+      console.log("Parsed savedKinerjaPage for deletion:", parsedData);
+      // filter out the checkedDates from parsedData
+      const filteredData = parsedData.filter(
+        (entry) => !checkedDates.includes(entry.date),
+      );
+      console.log("Filtered Data after deletion:", filteredData);
+      // save back to chrome.storage.local
+      await chrome.storage.local.set(
+        { savedKinerjaPage: JSON.stringify(filteredData) },
+        function () {
+          console.log("Data after deletion saved to chrome.storage.local");
+        },
+      );
+      alert("Data terpilih berhasil dihapus.");
+      // reload the popup to reflect changes
+      window.location.reload();
+    } catch (error) {
+      console.error("Error deleting selected data:", error);
+      alert("Gagal menghapus data. Periksa konsol untuk detailnya.");
+    }
+  });
+
 async function saveCurrentPageInLocalStorage(currentUrl) {
   console.log("Current URL inside saveCurrentPageInLocalStorage:", currentUrl);
   if (!currentUrl.includes("kinerja.bkn.go.id/kinerja_harian")) {
@@ -282,7 +321,7 @@ async function saveCurrentPageInLocalStorage(currentUrl) {
   try {
     localStorage.setItem("savedKinerjaPage", "test");
     alert(
-      "Halaman eKinerja berhasil disimpan di penyimpanan lokal browser Anda."
+      "Halaman eKinerja berhasil disimpan di penyimpanan lokal browser Anda.",
     );
   } catch (error) {
     console.error("Error saving page content:", error);
@@ -310,7 +349,7 @@ async function save(currentUrl) {
     ISOweekStart.setDate(simple.getDate() + diff);
     const format = (date) =>
       `${String(date.getDate()).padStart(2, "0")}-${String(
-        date.getMonth() + 1
+        date.getMonth() + 1,
       ).padStart(2, "0")}-${date.getFullYear()}`;
     let days = [];
     for (let i = 0; i < 7; i++) {
@@ -373,7 +412,7 @@ async function save(currentUrl) {
     // });
 
     const cellHasEvents = document.querySelectorAll(
-      ".vuecal__cell"
+      ".vuecal__cell",
       // "vuecal__event-title"
     );
     cellHasEvents.forEach((cell, index) => {
@@ -382,7 +421,7 @@ async function save(currentUrl) {
           date: weekDates[index],
           //   capture all item that has class vuecal__event-title inside the cell
           activities: Array.from(
-            cell.querySelectorAll(".vuecal__event-title")
+            cell.querySelectorAll(".vuecal__event-title"),
           ).map((eventEl) => eventEl.innerText),
         });
       }
@@ -414,7 +453,7 @@ async function save(currentUrl) {
     data.forEach((entry) => {
       const [day, month, year] = entry.date.split("-").map(Number);
       const formattedDate = `${year}-${String(month).padStart(2, "0")}-${String(
-        day
+        day,
       ).padStart(2, "0")}`;
       newData.push({
         week: currentWeek,
@@ -433,7 +472,7 @@ async function save(currentUrl) {
     console.log("mergedData before forEach", mergedData);
     newData.forEach((newEntry) => {
       const exists = mergedData.some(
-        (existingEntry) => existingEntry.date === newEntry.date
+        (existingEntry) => existingEntry.date === newEntry.date,
       );
       if (!exists) {
         mergedData.push(newEntry);
@@ -460,11 +499,11 @@ async function save(currentUrl) {
       { savedKinerjaPage: JSON.stringify(mergedData) },
       function () {
         console.log("Data saved to chrome.storage.local");
-      }
+      },
     );
 
     alert(
-      "Halaman eKinerja berhasil disimpan di penyimpanan lokal browser Anda."
+      "Halaman eKinerja berhasil disimpan di penyimpanan lokal browser Anda.",
     );
   } catch (error) {
     console.error("Error capturing week dates or events:", error);
@@ -477,7 +516,7 @@ async function exportToFile(
   format,
   selectedDates,
   identityData,
-  signatureData
+  signatureData,
 ) {
   console.log("exportToFile called with format:", format);
   // get from chrome.storage.local as well
@@ -607,7 +646,7 @@ async function exportToFile(
       });
 
       console.log(
-        "declared buildSingleSignatureTable and buildDoubleSignatureTable"
+        "declared buildSingleSignatureTable and buildDoubleSignatureTable",
       );
       const buildSingleSignatureTable = (signatureData) =>
         new Table({
@@ -619,7 +658,7 @@ async function exportToFile(
             rowAnchor(
               signatureData.useAnchor
                 ? ["", signatureData.signer[0].anchor]
-                : ["", ""]
+                : ["", ""],
             ),
             row(["", signatureData.signer[0].name]),
             row(["", `NIP. ${signatureData.signer[0].nip}`]),
@@ -640,7 +679,7 @@ async function exportToFile(
                     signatureData.signer[0].anchor,
                     signatureData.signer[1].anchor,
                   ]
-                : ["", ""]
+                : ["", ""],
             ),
             row([signatureData.signer[0].name, signatureData.signer[1].name]),
             row([
@@ -782,7 +821,7 @@ async function exportToFile(
                               font: "Arial",
                             }),
                           ],
-                        })
+                        }),
                     ),
                     margins: {
                       top: 100,
@@ -792,7 +831,7 @@ async function exportToFile(
                     },
                   }),
                 ],
-              })
+              }),
           ),
         ],
       });
@@ -895,9 +934,7 @@ async function exportToFile(
               }),
               contentTable,
               new Paragraph({}), // empty paragraph for spacing
-              ...(includeSignature && signatureTable
-                ? [signatureTable]
-                : []), // add signature table if needed
+              ...(includeSignature && signatureTable ? [signatureTable] : []), // add signature table if needed
             ],
           },
         ],
@@ -924,35 +961,93 @@ async function exportToFile(
   }
 }
 
+var checkedDates = [];
+async function checkCheckedDates(date) {
+  // if date is already in checkedDates, remove it
+  // else add it
+  if (checkedDates.includes(date)) {
+    checkedDates = checkedDates.filter((d) => d !== date);
+  } else {
+    checkedDates.push(date);
+  }
+  // remove duplicates
+  checkedDates = [...new Set(checkedDates)];
+  console.log("Checked Dates:", checkedDates);
+  // if checkedDates is not empty, show delete-selected-data button
+  const deleteButton = document.getElementById("delete-selected-data");
+  if (checkedDates.length > 0) {
+    deleteButton.style.display = "block";
+  } else {
+    deleteButton.style.display = "none";
+  }
+}
+
 // call when popup loaded
 document.addEventListener("DOMContentLoaded", async function () {
   console.log("Popup loaded!");
 
+  // Function to check if local data is empty
+  const isDataEmpty = (data) => {
+    if (!data) return true;
+
+    // If it's a string, try to parse it
+    if (typeof data === "string") {
+      try {
+        const parsed = JSON.parse(data);
+        // Check if parsed result is empty array or object
+        if (Array.isArray(parsed)) {
+          return parsed.length === 0;
+        }
+        if (typeof parsed === "object") {
+          return Object.keys(parsed).length === 0;
+        }
+      } catch (e) {
+        return true; // If parsing fails, consider it empty
+      }
+    }
+
+    // If it's already an array
+    if (Array.isArray(data)) {
+      return data.length === 0;
+    }
+
+    // If it's already an object
+    if (typeof data === "object") {
+      return Object.keys(data).length === 0;
+    }
+
+    return false;
+  };
   // const savedKinerjaPage = localStorage.getItem("savedKinerjaPage");
   // get from chrome.storage.local as well
   const container = document.getElementById("saved-data-container");
   const savedKinerjaPage = await chrome.storage.local
     .get("savedKinerjaPage")
     .then((result) => result.savedKinerjaPage);
-  if (savedKinerjaPage) {
-    console.log("Found savedKinerjaPage in localStorage.");
+  if (savedKinerjaPage && !isDataEmpty(savedKinerjaPage)) {
+    console.log("Found savedKinerjaPage in chrome.storage.local.");
     // parse it
     const parsedData = JSON.parse(savedKinerjaPage);
     console.log("Parsed savedKinerjaPage:", parsedData);
     // you can use parsedData to pre-fill checkboxes or other UI elements
   } else {
-    console.log("No savedKinerjaPage found in localStorage.");
+    console.log("No savedKinerjaPage found in chrome.storage.local.");
     // you can show a message to user that no data found
     // center the text horizontally and vertically in the container
-    container.style.height = "100px";
-    container.style.textAlign = "center";
-    container.style.display = "flex";
-    container.style.justifyContent = "center";
-    container.style.alignItems = "center";
-    container.style.color = "red";
-    container.style.fontSize = "14px";
-    container.innerText =
+    
+    // create a div to show the message
+    const messageDiv = document.createElement("div");
+    messageDiv.style.height = "100px";
+    messageDiv.style.width = "100%";
+    messageDiv.style.textAlign = "center";
+    messageDiv.style.display = "flex";
+    messageDiv.style.justifyContent = "center";
+    messageDiv.style.alignItems = "center";
+    messageDiv.style.color = "red";
+    messageDiv.style.fontSize = "14px";
+    messageDiv.innerText =
       "Belum ada data eKinerja yang disimpan.\nSilahkan ikuti langkah 1 untuk menyimpan data.";
+    container.appendChild(messageDiv);
   }
 
   /*
@@ -1054,7 +1149,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     const tbody = document.createElement("tbody");
     const maxDays = Math.max(
-      ...weeks.map((week) => groupedByWeek[week].length)
+      ...weeks.map((week) => groupedByWeek[week].length),
     );
     for (let i = 0; i < maxDays; i++) {
       const tr = document.createElement("tr");
@@ -1063,6 +1158,9 @@ document.addEventListener("DOMContentLoaded", async function () {
         const dayEntry = groupedByWeek[week][i];
         if (dayEntry) {
           const checkbox = document.createElement("input");
+          checkbox.addEventListener("change", () => {
+            checkCheckedDates(dayEntry.date);
+          });
           checkbox.type = "checkbox";
           checkbox.id = `week-${week}-date-${dayEntry.date}`;
           const label = document.createElement("label");
@@ -1106,7 +1204,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     if (signatureData && Object.keys(signatureData).length > 0) {
       console.log(
         "Found signatureData in chrome.storage.local:",
-        signatureData
+        signatureData,
       );
       document.getElementById("toggle-signature").checked = true;
       document.getElementById("signature-inputs").classList.add("visible");
@@ -1159,10 +1257,28 @@ document.addEventListener("DOMContentLoaded", async function () {
     const weekCheckbox = document.getElementById(`week-${week}`);
     const isChecked = weekCheckbox.checked;
     const checkboxes = container.querySelectorAll(
-      `input[id^="week-${week}-date-"]`
+      `input[id^="week-${week}-date-"]`,
     );
     checkboxes.forEach((checkbox) => {
       checkbox.checked = isChecked;
     });
+    // update checkedDates accordingly
+    checkboxes.forEach((checkbox) => {
+      const date = checkbox.id.replace(`week-${week}-date-`, "");
+      if (isChecked) {
+        if (!checkedDates.includes(date)) {
+          checkedDates.push(date);
+        }
+      } else {
+        checkedDates = checkedDates.filter((d) => d !== date);
+      }
+    });
+    // if checkedDates is not empty, show delete-selected-data button
+    const deleteButton = document.getElementById("delete-selected-data");
+    if (checkedDates.length > 0) {
+      deleteButton.style.display = "block";
+    } else {
+      deleteButton.style.display = "none";
+    }
   }
 });
